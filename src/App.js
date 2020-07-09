@@ -18,7 +18,7 @@ class App extends React.Component {
         {
           type: "line",
           label: "test",
-          backgroundColor: "rgba(0, 0, 0, 0)",
+          backgroundColor: "rgba(0, 0, 0, 1)",
           borderColor: this.props.theme.palette.primary.main,
           pointBackgroundColor: this.props.theme.palette.secondary.main,
           pointBorderColor: this.props.theme.palette.secondary.main,
