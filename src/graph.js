@@ -10,7 +10,6 @@ const styles = theme => ({
 });
 
 let updateInterval = 1000;
-let numTicks = 20;
 let typeData = "Live";
 
 class Graph extends React.Component {

@@ -1,5 +1,6 @@
 import React from "react";
-import Graph from "./graph"
+import Graph from "./graph";
+import FileLoader from "./file-loader";
 
 class DataForm extends React.Component {
     constructor(props) {
@@ -12,26 +13,25 @@ class DataForm extends React.Component {
   
     handleChange(event) {
       this.setState({value: event.target.value});
-      console.log(this.state.value)
     }
   
     handleSubmit(event) {
-    //   alert('A name was submitted: ' + this.state.value);
       event.preventDefault();
       this.setState({value: event.target.value})
     }
   
     render() {
       return (
-          <div>
-          <Graph ticks={this.state.value} />
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Number of data points:
-            <input type="number" value={this.state.value || ''} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" onSubmit={this.handleSubmit}/>
-        </form>
+        <div>
+            <FileLoader/>
+            <Graph ticks={this.state.value}/>
+            <form onSubmit={this.handleSubmit}>
+            <label>
+                Number of data points:
+                <input type="number" value={this.state.value || ''} onChange={this.handleChange} />
+            </label>
+                <input type="submit" value="Submit" onSubmit={this.handleSubmit}/>
+            </form>
         </div>
       );
     }
