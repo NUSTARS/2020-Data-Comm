@@ -1,10 +1,10 @@
 import React from "react";
-// import styled from "styled-components";
+import Graph from "./graph"
 
-class NameForm extends React.Component {
+class DataForm extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {value: ''};
+      this.state = {value: 20};
   
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
@@ -12,24 +12,29 @@ class NameForm extends React.Component {
   
     handleChange(event) {
       this.setState({value: event.target.value});
+      console.log(this.state.value)
     }
   
     handleSubmit(event) {
-      alert('A name was submitted: ' + this.state.value);
+    //   alert('A name was submitted: ' + this.state.value);
       event.preventDefault();
+      this.setState({value: event.target.value})
     }
   
     render() {
       return (
+          <div>
+          <Graph ticks={this.state.value} />
         <form onSubmit={this.handleSubmit}>
           <label>
-            Name:
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
+            Number of data points:
+            <input type="number" value={this.state.value || ''} onChange={this.handleChange} />
           </label>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit" onSubmit={this.handleSubmit}/>
         </form>
+        </div>
       );
     }
   }
 
-  export default NameForm;
+  export default DataForm;

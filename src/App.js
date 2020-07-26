@@ -1,14 +1,20 @@
 import React from "react";
-import NameForm from "./ticks";
+import DataForm from "./ticks";
 import Graph from "./graph"
 
 class App extends React.Component {
 
+  constructor(props) {
+    super(props);
+  };
+
+  // console.log(props.value);
+
   render() {
     return (
       <div>
-        <Graph />
-        <NameForm />
+        {/* <Graph props={DataForm.state.value}/> */}
+        <DataForm />
       </div>
     );
   }

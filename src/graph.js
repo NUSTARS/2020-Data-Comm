@@ -19,7 +19,7 @@ class Graph extends React.Component {
     super(props);
     this.state = {
       meta: {
-        ticks: numTicks,
+        ticks: props.ticks,
         lab: [],
         dat: []
       },
@@ -50,7 +50,7 @@ class Graph extends React.Component {
             {
               ticks: {
                 autoSkip: true,
-                maxTicksLimit: numTicks
+                maxTicksLimit: props.ticks
               }
             }
           ]
@@ -74,7 +74,7 @@ class Graph extends React.Component {
       newDat.push(newNum);
       newLab.push(this.state.meta.lab.length+1);
 
-      const newMeta = {...this.state.meta, lab: newLab, dat: newDat}
+      const newMeta = {ticks: this.props.ticks, lab: newLab, dat: newDat}
       this.setState({meta: newMeta})
 
       const oldDataSet = this.state.lineChartData.datasets[0];
