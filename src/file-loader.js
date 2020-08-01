@@ -21,7 +21,7 @@ class FileLoader extends React.Component {
   render() {
     return (
         <div onSubmit={this.onFormSubmit}>
-          <input type="file" name="file" accept=".txt" onChange={e => this.onChange(e)} />
+          <input type="file" name="file" accept=".csv" onChange={e => this.onChange(e)} />
         </div>
     );
   }

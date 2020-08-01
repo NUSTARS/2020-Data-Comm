@@ -4,9 +4,16 @@ import DataForm from "./ticks";
 
 class App extends React.Component {
 
-  // constructor(props) {
-  //   super(props);
-  // };
+  constructor(props) {
+    super(props);
+    this.state = {
+      version: 0,
+      flags: 0,
+      size: 0,
+      checksum: 0,
+      data: {}
+    }
+  };
 
   // console.log(props.value);
 
