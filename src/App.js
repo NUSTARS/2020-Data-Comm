@@ -1,5 +1,8 @@
 import React from "react";
 import DataForm from "./ticks";
+// import SplitPane, {Pane} from "react-split-pane";
+import './split-pane.css';
+import MiniDrawer from "./drawer";
 // import Graph from "./graph"
 
 class App extends React.Component {
@@ -7,21 +10,21 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      version: 0,
-      flags: 0,
-      size: 0,
-      checksum: 0,
+      version: 444,
+      flags: 3,
+      size: 2,
+      checksum: 4,
       data: {}
     }
   };
 
   // console.log(props.value);
 
-  render() {//
+  render() {
     return (
       <div>
-        {/* <Graph props={DataForm.state.value}/> */}
-        <DataForm />
+        <MiniDrawer/>
+       
       </div>
     );
   }

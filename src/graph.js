@@ -5,7 +5,9 @@ import Chart from "./chart";
 
 const styles = theme => ({
   "chart-container": {
-    height: 400
+    height: 400,
+    // width: 900,
+    overflow: "hidden"
   }
 });
 
@@ -77,17 +79,25 @@ class Graph extends React.Component {
       this.setState({meta: newMeta})
 
       const oldDataSet = this.state.lineChartData.datasets[0];
-      const newDataSet = { ...oldDataSet };
+      let newDataSet = { ...oldDataSet };
       newDataSet.data.push(newNum);
-      if (newDataSet.data.length > this.state.meta.ticks) {
+      if (this.state.meta.ticks !== this.props.ticks) {
+        newDataSet.data = newDataSet.data.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks)
+      }
+      else if (newDataSet.data.length > this.state.meta.ticks) {
         newDataSet.data.shift();
       }
+
+      const possLabs = this.state.meta.lab;
 
       const newChartData = {
         ...this.state.lineChartData,
         datasets: [newDataSet],
-        labels: this.state.meta.lab.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks)
+        labels: possLabs.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks)
+
       };
+      // console.log(possLabs.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks))
+      // console.log(newDataSet.data);
       this.setState({ lineChartData: newChartData });
     }
 
