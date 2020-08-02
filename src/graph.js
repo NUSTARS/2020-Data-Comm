@@ -55,7 +55,30 @@ class Graph extends React.Component {
               }
             }
           ]
-        }
+        },
+        plugins: {
+          zoom: {
+              // Container for pan options
+              pan: {
+                  // Boolean to enable panning
+                  enabled: true,
+
+                  // Panning directions. Remove the appropriate direction to disable 
+                  // Eg. 'y' would only allow panning in the y direction
+                  mode: 'x'
+              },
+
+              // Container for zoom options
+              zoom: {
+                  // Boolean to enable zooming
+                  enabled: true,
+
+                  // Zooming directions. Remove the appropriate direction to disable 
+                  // Eg. 'y' would only allow zooming in the y direction
+                  mode: 'x',
+              }
+          }
+      }
       }
     };
     this.updateChart = this.updateChart.bind(this);
@@ -68,12 +91,10 @@ class Graph extends React.Component {
 
   updateChart() {
       const newDat = this.state.meta.dat;
-      const newLab = this.state.meta.lab;
-
       const newNum = Math.round(Math.random()*100);
 
       newDat.push(newNum);
-      newLab.push(this.state.meta.lab.length+1);
+      const newLab = [...Array(newDat.length).keys()];
 
       const newMeta = {ticks: this.props.ticks, lab: newLab, dat: newDat}
       this.setState({meta: newMeta})
@@ -81,19 +102,19 @@ class Graph extends React.Component {
       const oldDataSet = this.state.lineChartData.datasets[0];
       let newDataSet = { ...oldDataSet };
       newDataSet.data.push(newNum);
-      if (this.state.meta.ticks !== this.props.ticks) {
-        newDataSet.data = newDataSet.data.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks)
-      }
-      else if (newDataSet.data.length > this.state.meta.ticks) {
-        newDataSet.data.shift();
-      }
+      // if (this.state.meta.ticks !== this.props.ticks) {
+      //   newDataSet.data = newDataSet.data.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks)
+      // }
+      // else if (newDataSet.data.length > this.state.meta.ticks) {
+      //   newDataSet.data.shift();
+      // }
 
       const possLabs = this.state.meta.lab;
 
       const newChartData = {
         ...this.state.lineChartData,
         datasets: [newDataSet],
-        labels: possLabs.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks)
+        labels: possLabs/*.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks)*/
 
       };
       // console.log(possLabs.slice(this.state.meta.ticks > this.state.meta.lab.length ? -this.state.meta.lab.length : -this.state.meta.ticks))
