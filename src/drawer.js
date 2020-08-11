@@ -14,7 +14,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import DataForm from "./ticks";
+import Graph from "./graph";
+import SpeedDials from "./speedDial";
 import { Table } from "@material-ui/core";
+import CustomizedTables from "./table"
+import CenteredGrid from './grid';
+import Grid from '@material-ui/core/Grid';
+import SettingsDial from './settings';
 
 let drawerWidth = 400;
 
@@ -70,9 +76,12 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: theme.spacing(0, 0,0,0),
+    // alignItems: "center",
+    justifyContent: "space-between",
+    padding: theme.spacing(0,0,0,0),
+    spacer: {
+      padding: 10
+    }
     // necessary for content to be below app bar
     // ...theme.mixins.toolbar
   },
@@ -121,19 +130,26 @@ export default function MiniDrawer() {
         }}
       >
         <div className={classes.toolbar}>
+          {open === true ? <SettingsDial/>  : null}
           <IconButton onClick={handleDrawerClose}>
             {open === false ? (
               <ChevronRightIcon/>
-            ) : (
-              <ChevronLeftIcon />
+            ) : (   
+              <div>
+                <ChevronLeftIcon />
+              </div>
             )}
           </IconButton>
         </div>
         <Divider />
         {open === true ? (
           <div>
+            
             <h1>Live</h1>
-            <List>
+            <Grid xs={12}>
+            <CustomizedTables/>
+            </Grid>
+            {/* <List>
               {["Inbox", "Starred", "Send email", "Drafts"].map(
                 (text, index) => (
                   <ListItem button key={text}>
@@ -144,10 +160,13 @@ export default function MiniDrawer() {
                   </ListItem>
                 )
               )}
-            </List>
+            </List> */}
             <Divider />
             <h1>Upload</h1>
-            <List>
+            <Grid xs={12}>
+            <CustomizedTables/>
+            </Grid>
+            {/* <List>
               {["All mail", "Trash", "Spam"].map((text, index) => (
                 <ListItem button key={text}>
                   <ListItemIcon>
@@ -156,7 +175,7 @@ export default function MiniDrawer() {
                   <ListItemText primary={text} />
                 </ListItem>
               ))}
-            </List>
+            </List> */}
           </div>
         ) : (
           <div />
@@ -164,7 +183,9 @@ export default function MiniDrawer() {
       </Drawer>
       <main className={classes.content}>
         {/* <div className={classes.toolbar} /> */}
-        <DataForm style={{width:"10px"}}/>
+        <CenteredGrid/>
+        {/* <Graph/> */}
+        <SpeedDials/>
       </main>
     </div>
   );
