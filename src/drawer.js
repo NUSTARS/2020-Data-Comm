@@ -2,25 +2,18 @@ import React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
-import DataForm from "./ticks";
-import Graph from "./graph";
 import SpeedDials from "./speedDial";
-import { Table } from "@material-ui/core";
 import CustomizedTables from "./table"
 import CenteredGrid from './grid';
 import Grid from '@material-ui/core/Grid';
 import SettingsDial from './settings';
+import ReadPacket from "./readPacket";
+
 
 let drawerWidth = 400;
 
@@ -146,7 +139,7 @@ export default function MiniDrawer() {
           <div>
             
             <h1>Live</h1>
-            <Grid xs={12}>
+            <Grid>
             <CustomizedTables/>
             </Grid>
             {/* <List>
@@ -180,6 +173,7 @@ export default function MiniDrawer() {
         ) : (
           <div />
         )}
+        <ReadPacket/>
       </Drawer>
       <main className={classes.content}>
         {/* <div className={classes.toolbar} /> */}

@@ -1,10 +1,5 @@
 import React from "react";
-import DataForm from "./ticks";
-// import SplitPane, {Pane} from "react-split-pane";
-import './split-pane.css';
 import MiniDrawer from "./drawer";
-import SpeedDials from "./speedDial"
-// import Graph from "./graph"
 
 class App extends React.Component {
 
@@ -25,7 +20,6 @@ class App extends React.Component {
     return (
       <div>
         <MiniDrawer/>
-       
       </div>
     );
   }

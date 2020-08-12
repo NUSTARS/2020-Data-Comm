@@ -1,39 +1,49 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Graph from './graph';
-import { Resizable, ResizableBox } from 'react-resizable';
-import DropDown from './dropdown';
-import DataForm from './ticks';
+import React from "react";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
-
-export default function CenteredGrid() {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root} xs={12}>
-      
-      {/* <Grid xs={12} > */}
-        {/* <ResizableBox> */}
-        <Paper className={classes.paper}>
-          <Grid xs={12}><Graph/></Grid>
-          <Grid xs={12} style={{justifyContent: "flex-center"}}><DropDown/></Grid>
-          {/* <Grid xs={3}><DataForm/></Grid> */}
-        </Paper>
-        {/* </ResizableBox> */}
-      {/* </Grid> */}
-      
-    </div>
-  );
+class ReadPacket extends React.Component {
+  constructor(props) {
+    super(props)
+      this.state = {
+          byteArray: [],
+          done: false
+      }
+      this.xhr = null
+  }
+  componentDidMount() {
+      this.xhr = new XMLHttpRequest()
+      this.xhr.open('GET', '/api/binary', true);
+      this.xhr.responseType = 'blob';
+      this.xhr.onload = () => {
+        // if (request.status >= 200 && request.status < 400) {
+          var uInt8Array = new Uint8Array(this.xhr.response);
+          console.log(uInt8Array);
+          this.setState({byteArray: uInt8Array, done: true})
+        // } 
+      };
+      this.xhr.send();
+  }
+  componentWillUnmount() {
+      // Cancel the xhr request, so the callback is never called
+      if (this.xhr && this.xhr.readyState !== 4) {
+          this.xhr.abort();
+      }
+  }
+  render() {
+      if(!this.state.done) {
+          return (
+              <div>
+                  Users Loading 
+              </div>
+          )
+      } else {
+          return (
+              <div>
+                  Users: {this.state.users}            
+              </div>
+          )
+      }
+  }
 }
+
+export default ReadPacket;
+
