@@ -1,4 +1,5 @@
-import React from "react";
+import React, {setState, useEffect} from "react";
+import SerialPort from "serialport";
 import MiniDrawer from "./drawer";
 
 class App extends React.Component {
@@ -6,20 +7,34 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      version: 444,
+      version: 0,
       flags: 3,
       size: 2,
       checksum: 4,
-      data: {}
+      data: {},
+      time: 0,
+      test: [0,1,2,3]
     }
   };
 
-  // console.log(props.value);
+  componentDidMount() {
+    fetch('/time/'+this.state.test).then(res => res.json()).then(data => {
+      this.setState({time: data.time, test: data.test});
+    }, [])
+  }
+
+  componentDidUpdate() {
+    fetch('/time/'+this.state.test).then(res => res.json()).then(data => {
+      this.setState({time: data.time, test: data.test});
+    }, []);
+    // console.log(this.state.version);
+  }
 
   render() {
     return (
       <div>
-        <MiniDrawer/>
+        {/* <MiniDrawer/> */}
+        <p>The current time is {this.state.time}. and {this.state.test}</p>
       </div>
     );
   }
