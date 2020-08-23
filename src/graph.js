@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Chart from "./chart";
 import { Resizable, ResizableBox } from 'react-resizable';
 import * as zoom from 'chartjs-plugin-zoom';
-import DropDown from "./dropdown";
+import DropDown from "./dataDropdown";
 import "./split-pane.css";
 
 const styles = theme => ({

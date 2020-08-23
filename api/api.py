@@ -3,6 +3,7 @@ import datetime
 import numpy as np
 from flask import Flask
 from .parsePacket import read_packet, types
+from .serialPort import get_ports
 
 app = Flask(__name__)
 
@@ -17,3 +18,7 @@ def get_current_time(test):
 def read_binary(packet):
     ba = bytearray(packet)
     return read_packet(ba)
+
+@app.route('/ports/')
+def list_ports():
+    return get_ports()

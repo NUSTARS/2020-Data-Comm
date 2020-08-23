@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 350,
+    // minWidth: 350,
   },
 });
 

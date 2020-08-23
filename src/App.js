@@ -1,6 +1,6 @@
 import React, {setState, useEffect} from "react";
-import SerialPort from "serialport";
 import MiniDrawer from "./drawer";
+// import SPort from "./serialPort";
 
 class App extends React.Component {
 
@@ -17,24 +17,25 @@ class App extends React.Component {
     }
   };
 
-  componentDidMount() {
-    fetch('/time/'+this.state.test).then(res => res.json()).then(data => {
-      this.setState({time: data.time, test: data.test});
-    }, [])
-  }
+  // componentDidMount() {
+  //   fetch('/time/'+this.state.test).then(res => res.json()).then(data => {
+  //     this.setState({time: data.time, test: data.test});
+  //   }, [])
+  // }
 
-  componentDidUpdate() {
-    fetch('/time/'+this.state.test).then(res => res.json()).then(data => {
-      this.setState({time: data.time, test: data.test});
-    }, []);
-    // console.log(this.state.version);
-  }
+  // componentDidUpdate() {
+  //   fetch('/time/'+this.state.test).then(res => res.json()).then(data => {
+  //     this.setState({time: data.time, test: data.test});
+  //   }, []);
+  //   // console.log(this.state.version);
+  // }
 
   render() {
     return (
       <div>
-        {/* <MiniDrawer/> */}
-        <p>The current time is {this.state.time}. and {this.state.test}</p>
+        <MiniDrawer/>
+        {/* <p>The current time is {this.state.time}. and {this.state.test}</p> */}
+        {/* <SPort/> */}
       </div>
     );
   }

@@ -8,7 +8,7 @@ const labels = [
   { value: 'T1', label: 'T1'},
 ];
 
-const DropDown = () => (
+const DataDropDown = () => (
     <Select
       defaultValue={[labels[1]]}
       isMulti
@@ -19,4 +19,4 @@ const DropDown = () => (
     />
   );
 
-  export default DropDown;
+  export default DataDropDown;
