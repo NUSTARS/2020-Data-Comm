@@ -20,6 +20,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import SpeedDials from "./speedDial";
 import CustomizedTables from "./table"
 import CenteredGrid from './grid';
+import SelectPort from './selectPort';
 import Grid from '@material-ui/core/Grid';
 import SettingsDial from './settings';
 
@@ -123,6 +124,7 @@ export default function PersistentDrawerLeft() {
           <Typography variant="h6" noWrap>
             NUSTARS
           </Typography>
+          <SelectPort/>
         </Toolbar>
       </AppBar>
       <Drawer

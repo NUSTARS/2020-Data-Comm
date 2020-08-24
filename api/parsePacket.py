@@ -1,4 +1,5 @@
 import struct
+import time
 
 """
     PACKET FORMAT
@@ -39,6 +40,7 @@ def read_packet(ba):
                 'payloadSize': unpack('>H', ba[2:4])[0],
                 'seqNum': unpack('>H', ba[4:6])[0],
                 'checksum': unpack('>I', ba[6:10])[0],
+                'time': datetime.datetime.fromtimestamp(int(time.time())).strftime("%H:%M:%S")
                 'data': {}
               }
 
@@ -54,11 +56,11 @@ def read_packet(ba):
                 i += 4+types[dtype][0]
        
     except IndexError as error:
-        return 0
+        return {'error': error}
 
     except struct.error as error:
-        return 0
+        return {'error': error}
 
-    except: return 0
+    except: return {'error': 'exception'}
     
-    return obj if i==len(ba) else 0
+    return obj if i==len(ba) else {'error': 'exception'}

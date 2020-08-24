@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import Button from '@material-ui/core/Button';
 
 // displayed on SETTINGS PANE
 class SelectPort extends React.Component {
@@ -45,9 +46,25 @@ class SelectPort extends React.Component {
 
   onChangeFunc = selectedOption => {
     this.setState({selected: selectedOption});
+    console.log(selectedOption);
     // TODO:
     // add selected port to redux store
-    // port will be displayed at top of screen?
+    // port dropdown in toolbar
+    // POST selected port to Flask:
+    fetch('/selected-port/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({port: selectedOption}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   }
 
   render() {
@@ -55,7 +72,7 @@ class SelectPort extends React.Component {
       <div>
         <Select
           name="ports"
-          value={val}
+          // value={val}
           options={this.state.ports}
           className="basic-single"
           classNamePrefix="select"
@@ -63,7 +80,7 @@ class SelectPort extends React.Component {
         />
         <Button 
           variant="contained" 
-          onClick={(getPorts)}>
+          onClick={(() => this.getPorts)}>
             Refresh
         </Button>
       </div>
