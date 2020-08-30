@@ -45,8 +45,8 @@ class SelectPort extends React.Component {
   }
 
   onChangeFunc = selectedOption => {
-    this.setState({selected: selectedOption});
-    console.log(selectedOption);
+    this.setState({selected: selectedOption.value});
+    console.log(selectedOption.value);
     // TODO:
     // add selected port to redux store
     // port dropdown in toolbar
@@ -56,7 +56,7 @@ class SelectPort extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({port: selectedOption}),
+      body: JSON.stringify({port: selectedOption.value}),
     })
     .then(response => response.json())
     .then(data => {

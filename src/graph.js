@@ -91,31 +91,70 @@ class Graph extends React.Component {
     updateInterval)
   }
 
-  updateChart() {
-      console.log(this.state.lineChartOptions.scales.xAxes.suggestedMax);
-      const newDat = this.state.meta.dat;
-      const newNum = Math.round(Math.random()*100);
+  async grabData() {
+    const response = await fetch('/request-data/', {});
+    const json = await response.json();
+    console.log("json", json)
 
-      newDat.push(newNum);
-      const newLab = [...Array(newDat.length).keys()];
+    // if no new data, return 0
+    if (json.length == 0) { return 0; }
+    // else return new data
+    else { return [json[0]['time'], json[0]['data']]; }
+  }
 
-      const newMeta = {ticks: this.props.ticks, lab: newLab, dat: newDat}
-      this.setState({meta: newMeta})
+  async updateChart() {
+    const d = await this.grabData();
+    console.log(d);
+    if ( !d ) { return; }
+    const newDat = this.state.meta.dat;
+    const newNum = d[1][10];
 
-      const oldDataSet = this.state.lineChartData.datasets[0];
-      let newDataSet = { ...oldDataSet };
-      newDataSet.data.push(newNum);
+    newDat.push(newNum);
+    const newLab = [...Array(newDat.length).keys()];
 
-      const possLabs = this.state.meta.lab;
+    const newMeta = {ticks: this.props.ticks, lab: newLab, dat: newDat}
+    this.setState({meta: newMeta})
 
-      const newChartData = {
-        ...this.state.lineChartData,
-        datasets: [newDataSet],
-        labels: possLabs
+    const oldDataSet = this.state.lineChartData.datasets[0];
+    let newDataSet = { ...oldDataSet };
+    newDataSet.data.push(newNum);
 
-      };
-      this.setState({ lineChartData: newChartData });
-    }
+    const possLabs = this.state.meta.lab;
+
+    const newChartData = {
+      ...this.state.lineChartData,
+      datasets: [newDataSet],
+      labels: possLabs
+    };
+    this.setState({ lineChartData: newChartData });
+  }    
+
+  // updateChart() {
+  //     this.grabData().then((d) => {
+  //       const newDat = this.state.meta.dat;
+  //       console.log(d);
+  //       const newNum = d[1][10];
+
+  //       newDat.push(newNum);
+  //       const newLab = [...Array(newDat.length).keys()];
+
+  //       const newMeta = {ticks: this.props.ticks, lab: newLab, dat: newDat}
+  //       this.setState({meta: newMeta})
+
+  //       const oldDataSet = this.state.lineChartData.datasets[0];
+  //       let newDataSet = { ...oldDataSet };
+  //       newDataSet.data.push(newNum);
+
+  //       const possLabs = this.state.meta.lab;
+
+  //       const newChartData = {
+  //         ...this.state.lineChartData,
+  //         datasets: [newDataSet],
+  //         labels: possLabs
+  //       };
+  //       this.setState({ lineChartData: newChartData });
+  //     })      
+  //   }
 
   render() {
     const { classes } = this.props;

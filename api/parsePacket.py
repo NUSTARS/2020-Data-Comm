@@ -40,7 +40,7 @@ def read_packet(ba):
                 'payloadSize': unpack('>H', ba[2:4])[0],
                 'seqNum': unpack('>H', ba[4:6])[0],
                 'checksum': unpack('>I', ba[6:10])[0],
-                'time': datetime.datetime.fromtimestamp(int(time.time())).strftime("%H:%M:%S")
+                'time': datetime.datetime.fromtimestamp(int(time.time())).strftime("%H:%M:%S"),
                 'data': {}
               }
 
