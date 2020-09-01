@@ -36,7 +36,7 @@ class Graph extends React.Component {
           {
             type: "line",
             label: typeData,
-            backgroundColor: "rgba(0, 0, 0, 0)", // "rgba(78, 42, 132, 1)"
+            backgroundColor: "rgba(0, 0, 0, 1)", // "rgba(78, 42, 132, 1)"
             borderColor: "rgba(78, 42, 132, 1)", //this.props.theme.palette.primary.main,
             pointBackgroundColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
             pointBorderColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
@@ -92,6 +92,7 @@ class Graph extends React.Component {
   }
 
   async grabData() {
+    // TODO: if no port selected, don't bother with request!
     const response = await fetch('/request-data/', {});
     const json = await response.json();
     console.log("json", json)
@@ -128,33 +129,6 @@ class Graph extends React.Component {
     };
     this.setState({ lineChartData: newChartData });
   }    
-
-  // updateChart() {
-  //     this.grabData().then((d) => {
-  //       const newDat = this.state.meta.dat;
-  //       console.log(d);
-  //       const newNum = d[1][10];
-
-  //       newDat.push(newNum);
-  //       const newLab = [...Array(newDat.length).keys()];
-
-  //       const newMeta = {ticks: this.props.ticks, lab: newLab, dat: newDat}
-  //       this.setState({meta: newMeta})
-
-  //       const oldDataSet = this.state.lineChartData.datasets[0];
-  //       let newDataSet = { ...oldDataSet };
-  //       newDataSet.data.push(newNum);
-
-  //       const possLabs = this.state.meta.lab;
-
-  //       const newChartData = {
-  //         ...this.state.lineChartData,
-  //         datasets: [newDataSet],
-  //         labels: possLabs
-  //       };
-  //       this.setState({ lineChartData: newChartData });
-  //     })      
-  //   }
 
   render() {
     const { classes } = this.props;

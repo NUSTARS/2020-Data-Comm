@@ -1,6 +1,9 @@
 import React from 'react';
 import Select from 'react-select';
 import Button from '@material-ui/core/Button';
+import usePortState from './App'
+
+const {port, setPort} = usePortState();
 
 // displayed on SETTINGS PANE
 class SelectPort extends React.Component {
@@ -47,10 +50,11 @@ class SelectPort extends React.Component {
   onChangeFunc = selectedOption => {
     this.setState({selected: selectedOption.value});
     console.log(selectedOption.value);
-    // TODO:
-    // add selected port to redux store
-    // port dropdown in toolbar
-    // POST selected port to Flask:
+
+    // add selected port to global store
+    setPort(selectedOption.value)
+
+    // send selected port to flask background thread
     fetch('/selected-port/', {
       method: 'POST',
       headers: {
@@ -60,10 +64,10 @@ class SelectPort extends React.Component {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);
+      console.log('Send port to Flask:', data);
     })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error('Error in sending port:', error);
     });
   }
 
