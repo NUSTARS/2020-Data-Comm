@@ -82,7 +82,8 @@ def run():
             while not packet and run: 
                 buf = buf[1:]
                 buf += ser.read(ser.in_waiting)
-                packet = read_packet(bytearray(buf))
+                if len(buf) > 10: # possible to be a full packet, has to be more than just header
+                    packet = read_packet(bytearray(buf))
             else:
                 with dataLock:
                     data.append(packet)

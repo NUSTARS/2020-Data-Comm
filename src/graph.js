@@ -5,8 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Chart from "./chart";
 import { Resizable, ResizableBox } from 'react-resizable';
 import * as zoom from 'chartjs-plugin-zoom';
-import DropDown from "./dataDropdown";
-import "./split-pane.css";
+import useDataState from './App';
+
+const {data, setData} = useDataState();
 
 const styles = theme => ({
   "chart-container": {
@@ -15,28 +16,19 @@ const styles = theme => ({
   }
 });
 
-
-
-let updateInterval = 1000;
-let typeData = "Live";
-
 class Graph extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      meta: {
-        ticks: props.ticks,
-        lab: [],
-        dat: []
-      },
+      selected = (typeof props.selected == 'undefined') ? [] : props.selected,
       lineChartData: {
         labels: [],
         datasets: [
           {
             type: "line",
-            label: typeData,
-            backgroundColor: "rgba(0, 0, 0, 1)", // "rgba(78, 42, 132, 1)"
+            label: 'set1',
+            backgroundColor: "rgba(0, 0, 0, 1)",
             borderColor: "rgba(78, 42, 132, 1)", //this.props.theme.palette.primary.main,
             pointBackgroundColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
             pointBorderColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
@@ -57,7 +49,6 @@ class Graph extends React.Component {
             {
               ticks: {
                 autoSkip: true,
-                // maxTicksLimit: props.ticks,
                 suggestedMax: 100
               }
             }
@@ -80,10 +71,6 @@ class Graph extends React.Component {
       }
       }
     };
-    this.ref = {
-      lineChart:React.createRef()
-    };
-    this.updateChart = this.updateChart.bind(this);
   }
 
   componentDidMount() {
@@ -135,22 +122,10 @@ class Graph extends React.Component {
 
     return (
       <div xs={12} style={{height: 400}}>
-        {/* <Grid container spacing={3}>
-        <Grid xs={6}>
-        <Grid item xs={3}> */}
-        {/* <ResizableBox  width={400} height={200}
-        minConstraints={[100, 100]} maxConstraints={[800, 400]}> */}
         <Chart 
           data={this.state.lineChartData}
           options={this.state.lineChartOptions}
         />
-        {/* </ResizableBox> */}
-        {/* </Grid>
-        <Grid item xs={6}>
-        <DropDown />
-        </Grid>
-        </Grid>
-        </Grid> */}
       </div>
     );
   }

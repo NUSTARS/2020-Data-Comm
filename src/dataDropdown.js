@@ -1,22 +1,61 @@
 import React from 'react';
 import Select from 'react-select';
-// import { flavourOptions } from './docs/data';
+import useDataState from './App';
 
-const labels = [
-  { value: 'A1', label: 'A1'},
-  { value: 'B2', label: 'B2'},
-  { value: 'T1', label: 'T1'},
-];
+const {data, setData} = useDataState();
 
-const DataDropDown = () => (
-    <Select
-      defaultValue={[labels[1]]}
-      isMulti
-      name="labels"
-      options={labels}
-      className="basic-multi-select"
-      classNamePrefix="select"
-    />
-  );
+class DataDropDown extends React.Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      options = [],
+      selected = []
+    }
+  };
 
-  export default DataDropDown;
+  componentDidMount() {
+    var options = [];
+    Object.keys(data).forEach(key => options.push(
+      {
+        value: key,
+        label: key
+      }
+    ));
+    this.setState({options: options});
+  }
+
+  componentDidUpdate() {
+    var options = [];
+    Object.keys(data).forEach(key => options.push(
+      {
+        value: key,
+        label: key
+      }
+    ));
+    this.setState({options: options});
+
+    if (this.props.onChange) {
+      this.props.onChange(this.state);
+    }
+  }
+
+  onChangeFunc = selectedOptions => this.setState({selected: selectedOptions.value});
+
+  // TODO: pass selected options to graph!
+
+  render() {
+    return (<Select
+            // defaultValue={[labels[1]]}
+            isMulti
+            name="labels"
+            options={options}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            onChange={this.onChangeFunc}
+          />
+    );
+  }
+}
+
+export default DataDropDown;

@@ -1,7 +1,9 @@
 import React from "react";
+import { useDataState, usePortState } from './App';
 
 const {data, setData} = useDataState();
 const {port, setPort} = usePortState();
+const updateInterval = 1000;
 
 class GetData extends React.Component {
 
@@ -19,7 +21,7 @@ class GetData extends React.Component {
   }
 
   async grabData() {
-    if (!port) {
+    if (port) {
       const response = await fetch('/request-data/', {});
       const json = await response.json();
 
