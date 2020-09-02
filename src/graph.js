@@ -23,19 +23,19 @@ class Graph extends React.Component {
     this.state = {
       selected = (typeof props.selected == 'undefined') ? [] : props.selected,
       lineChartData: {
-        labels: [],
+        // labels: [],
         datasets: [
-          {
-            type: "line",
-            label: 'set1',
-            backgroundColor: "rgba(0, 0, 0, 1)",
-            borderColor: "rgba(78, 42, 132, 1)", //this.props.theme.palette.primary.main,
-            pointBackgroundColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
-            pointBorderColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
-            borderWidth: "2",
-            lineTension: 0.45,
-            data: []
-          }
+          // {
+          //   type: "line",
+          //   label: 'set1',
+          //   backgroundColor: "rgba(0, 0, 0, 1)",
+          //   borderColor: "rgba(78, 42, 132, 1)", //this.props.theme.palette.primary.main,
+          //   pointBackgroundColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
+          //   pointBorderColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
+          //   borderWidth: "2",
+          //   lineTension: 0.45,
+          //   data: []
+          // }
         ]
       },
       lineChartOptions: {
@@ -73,49 +73,54 @@ class Graph extends React.Component {
     };
   }
 
+  updateState() {
+    var datasets = []
+    var yAxes = []
+    this.state.selected.forEach(label => {
+        datasets.push(
+          {
+            type: 'line',
+            label: label,
+            labels: Object.keys(data[label]),
+            data: Object.values(data[label]),
+            backgroundColor: "rgba(0, 0, 0, 1)",
+            borderColor: "rgba(78, 42, 132, 1)", //this.props.theme.palette.primary.main,
+            pointBackgroundColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
+            pointBorderColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
+            borderWidth: "2",
+            lineTension: 0.45,
+            yAxisID: label
+          }
+        );
+        yAxes.push(
+          {
+            id: label,
+            position: 'left'
+          }
+        );
+
+        const newChartData = {
+          ... this.state.lineChartData,
+          datasets: datasets
+        }
+
+        const newChartOptions = {
+          ... this.state.lineChartOptions,
+          scales: {... scales, yAxes: yAxes}
+        }
+
+        this.setState({lineChartData: newChartData, lineChartOptions: newChartOptions})
+      }
+    )
+  }
+  
   componentDidMount() {
-    setInterval( this.updateChart,
-    updateInterval)
+    this.updateState();
   }
 
-  async grabData() {
-    // TODO: if no port selected, don't bother with request!
-    const response = await fetch('/request-data/', {});
-    const json = await response.json();
-    console.log("json", json)
-
-    // if no new data, return 0
-    if (json.length == 0) { return 0; }
-    // else return new data
-    else { return [json[0]['time'], json[0]['data']]; }
+  componentDidUpdate() {
+    this.updateState();
   }
-
-  async updateChart() {
-    const d = await this.grabData();
-    console.log(d);
-    if ( !d ) { return; }
-    const newDat = this.state.meta.dat;
-    const newNum = d[1][10];
-
-    newDat.push(newNum);
-    const newLab = [...Array(newDat.length).keys()];
-
-    const newMeta = {ticks: this.props.ticks, lab: newLab, dat: newDat}
-    this.setState({meta: newMeta})
-
-    const oldDataSet = this.state.lineChartData.datasets[0];
-    let newDataSet = { ...oldDataSet };
-    newDataSet.data.push(newNum);
-
-    const possLabs = this.state.meta.lab;
-
-    const newChartData = {
-      ...this.state.lineChartData,
-      datasets: [newDataSet],
-      labels: possLabs
-    };
-    this.setState({ lineChartData: newChartData });
-  }    
 
   render() {
     const { classes } = this.props;
