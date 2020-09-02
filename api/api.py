@@ -69,7 +69,6 @@ def run():
     global run
     prev_port = None
     buf = b''
-    seq_num = 0
     while run:
         if selected_port:
             if prev_port != selected_port:
@@ -85,11 +84,9 @@ def run():
                 buf += ser.read(ser.in_waiting)
                 packet = read_packet(bytearray(buf))
             else:
-                if packet['seqNum'] == seq_num:
-                    with dataLock:
-                        data.append(packet)
-                    seq_num += 1
-                    buf = buf[10+packet['payloadSize']:]
+                with dataLock:
+                    data.append(packet)
+                buf = buf[10+packet['payloadSize']:]
             
             prev_port = selected_port
     

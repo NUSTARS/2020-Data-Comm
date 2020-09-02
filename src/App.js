@@ -1,6 +1,5 @@
 import React, { createContext } from "react";
 import MiniDrawer from "./drawer";
-// import SPort from "./serialPort";
 
 const dataInitState = {data: {}, setData: undefined};
 const portInitState = {port: '', setPort: undefined};
