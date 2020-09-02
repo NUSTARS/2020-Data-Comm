@@ -4,9 +4,10 @@ import numpy as np
 import threading
 import serial
 import json
+import atexit
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
-from parsePacket import read_packet, types
+from parsePacket import read_packet, unpackHeader, unpackPayload, types, header
 from serialPort import get_ports
 
 app = Flask(__name__)
@@ -16,11 +17,22 @@ CORS(app)
 
 @app.route('/ports/')
 def list_ports():
+    '''
+    Type: GET
+    Sends available serial ports to front end
+    - Output: list of port names (type: string)
+    '''
     return get_ports()
 
 @app.route('/selected-port/', methods=['POST'])
 def selected_port():
+    '''
+    Type: POST
+    Receives selected serial port from front end
+    - Output: Success or failure
+    '''
     global selected_port
+    global dataLock
     print('post app')
     req = request.json
     print(req)
@@ -30,7 +42,13 @@ def selected_port():
 
 @app.route('/request-data/')
 def get_data():
+    '''
+    Type: GET
+    Sends any new data to front end
+    - Output: List of new data
+    '''
     global data
+    global dataLock
     with dataLock:
         d = data.copy()
         print(f'data: {d}')
@@ -39,39 +57,41 @@ def get_data():
     return jsonify(d)
 
 def run():
+    '''
+    Reads packets from serial port and appends them to data array
+    - Input: None
+    - Output: None
+    '''
     global data
     global sthread
+    global dataLock
     global selected_port
-    # x = 0
-    # y = 0
-    while True:
-        print(f'port: {selected_port}')
+    global run
+    prev_port = None
+    buf = b''
+    while run:
         if selected_port:
-            # print("WE HAVE PORT!")
-            # actual:
-            ser = serial.Serial(self.selected_port)
-            print(ser.name)
-            print('Reading from port...')
-            s = ser.read(size=10) # reads until and including checksum
-            packet = read_packet(bytearray(s))
-            self.data.append(packet)
+            if prev_port != selected_port:
+                ser.close()
+                ser = serial.Serial(selected_port)
 
-            # test:
-        #     obj = {
-        #         'time': x,
-        #         'data': {10: y}
-        #     }
-        #     print('test1')
-        #     print(x)
-        #     with dataLock:
-        #         data.append(obj)
-        #         print('test2')
-        #     x += 1
-        #     y = np.random.randint(0,100)
+            print(f'Reading from port {ser.name}...')
 
-        # # print('test3')
-        # time.sleep(1)
-        # # print('test4')
+            buf += ser.read(ser.in_waiting)
+            packet = read_packet(bytearray(buf))
+            while not packet and run: 
+                buf = buf[1:]
+                buf += ser.read(ser.in_waiting)
+                packet = read_packet(bytearray(buf))
+            else:
+                with dataLock:
+                    data.append(packet)
+                buf = buf[10+packet['payloadSize']:]
+            
+            prev_port = selected_port
+    
+    ser.close()
+    sthread.join()
 
 def startThread():
     global sthread
@@ -79,7 +99,13 @@ def startThread():
 
 data = []
 selected_port = None
+run = True
 dataLock = threading.Lock()
 sthread = threading.Thread(target=run, args=())
 
 startThread()
+
+@atexit.register
+def terminate_thread():
+    global run
+    run = False

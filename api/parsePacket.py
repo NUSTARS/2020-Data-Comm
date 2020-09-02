@@ -1,4 +1,5 @@
-import struct
+from struct import unpack, Struct
+from binascii import crc32
 import time
 import datetime
 
@@ -19,7 +20,8 @@ Byte #
 """
 
 # source venv/bin/activate
-# global vars
+
+# dict containing TYPE-ID : [TYPE-SIZE, FORMAT-STRING] pairs
 types = {
             0: [1, '>B'], # uint8
             1: [2, '>H'], # uint16
@@ -33,35 +35,66 @@ types = {
             9: [8, '>d']  # float 64
         }
 
+# struct class containing format string for unpacking
+header = Struct('>BBHHI')
+
+def unpackHeader(hba):
+    '''
+    Unpacks the header bytes of the packet.
+    - Input:    header bytes (10)
+    - Output:   (version, flags, payload-size, sequence-num, checksum)
+    '''
+    return header.unpack(hba)
+
+def unpackPayload(pba, pSize):
+    '''
+    Unpacks the payload bytes of the packet.
+    - Input:    payload bytes, payload size
+    - Output:   {uid1: data1, uid2: data2, ...}
+    '''
+    d = {}
+    i = 0
+    while (i < pSize):
+        uid = unpack('>H', pba[i:i+2])[0]
+        reserved = unpack('>H', pba[i+2:i+3])
+        if reserved != 0: return 0
+        dtype = unpack('>B', pba[i+3:i+4])[0]
+        data = unpack(types[dtype][1], pba[i+4:i+4+dtype])[0]
+
+        d[uid] = data
+        i += 4+types[dtype][0]
+    
+    return d if i==pSize else 0 # 0 if packet malformed
+
 def read_packet(ba):
+    '''
+    Parses packets read from serial port.
+    - Input:    None
+    - Output:   Packet object if parse successful, 0 otherwise
+    '''
     try:
+        h = unpackHeader(ba[:10])
+        if h[4] != crc32(ba[10:]): return 0 # checksum failure
+        d = unpackPayload(ba[10:], h[2])
+        if not d: return 0 # payload unpacking failure
         obj = {
-                'version': unpack('>B', ba[0:1])[0], 
-                'flags': unpack('>B', ba[1:2])[0],
-                'payloadSize': unpack('>H', ba[2:4])[0],
-                'seqNum': unpack('>H', ba[4:6])[0],
-                'checksum': unpack('>I', ba[6:10])[0],
+                'version': h[0], 
+                'flags': h[1],
+                'payloadSize': h[2],
+                'seqNum': h[3],
+                'checksum': h[4],
                 'time': datetime.datetime.fromtimestamp(int(time.time())).strftime("%H:%M:%S"),
-                'data': {}
+                'data': d
               }
-
-        i = 10
-        while (i < len(ba)):
-                uid = unpack('>H', ba[i:i+2])[0]
-                reserved = unpack('>H', ba[i+2:i+3])
-                if reserved != 0: return 0
-                dtype = unpack('>B', ba[i+3:i+4])[0]
-                data = unpack(types[dtype][1], ba[i+4:i+4+dtype])[0]
-
-                obj['data'][uid] = data
-                i += 4+types[dtype][0]
        
     except IndexError as error:
-        return {'error': error}
+        print(f'Error: {error}')
+        return 0
 
     except struct.error as error:
-        return {'error': error}
+        print(f'Error: {error}')
+        return 0
 
-    except: return {'error': 'exception'}
+    except: return 0
     
-    return obj if i==len(ba) else {'error': 'exception'}
+    else: return obj
