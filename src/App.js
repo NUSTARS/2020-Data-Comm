@@ -1,6 +1,6 @@
-import React, { createContext } from "react";
+import React, { useReducer } from 'react';
 import MiniDrawer from "./drawer";
-import GlobalStateProvider from './globalState';
+import { Provider } from './globalState';
 
 // const dataInitState = {data: {}, setData: undefined};
 // const portInitState = {port: '', setPort: undefined};
@@ -29,14 +29,32 @@ import GlobalStateProvider from './globalState';
 // export const useDataState = () => React.useContext(DataStateContext);
 // export const usePortState = () => React.useContext(PortStateContext);
 
+// const initialGlobalState = {
+//   data: {},
+//   port: ''
+// };
+
+// /**
+//  * Global State provider & hooks
+//  */
+// const useValue = () =>
+//   React.useReducer(
+//     (state, newValue) => ({ ...state, ...newValue }),
+//     initialGlobalState
+//   );
+
+// const GlobalStateProvider = ({ children }) => (
+//   <Provider useValue={useValue}>{children}</Provider>
+// );
+
 const App = () => {
 
   return ( 
-    <GlobalStateProvider>
+    <Provider>
       <div>
         <MiniDrawer/>
       </div>
-    </GlobalStateProvider>
+    </Provider>
   )
 }
 

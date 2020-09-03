@@ -1,26 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
 import Chart from "./chart";
-import { Resizable, ResizableBox } from 'react-resizable';
 import * as zoom from 'chartjs-plugin-zoom';
-import { useDataState } from './globalState';
+import { useTracked } from './globalState';
 
-const {data, setData} = useDataState();
 
-const styles = theme => ({
-  "chart-container": {
-    maxHeight: 600,
-    overflow: "hidden"
-  }
-});
+// const styles = theme => ({
+//   "chart-container": {
+//     maxHeight: 600,
+//     overflow: "hidden"
+//   }
+// });
 
-class Graph extends React.Component {
+export function Graph(props) {
 
-  constructor(props) {
-    super(props);
-    this.state = {
+  const initialState = {
       selected: (typeof props.selected === 'undefined') ? [] : props.selected,
       lineChartData: {
         // labels: [],
@@ -56,62 +50,54 @@ class Graph extends React.Component {
                   sensitivity: 0.5,
               }
           }
-      }
+        }
       }
     };
-  }
 
-  updateState() {
-    var datasets = []
-    var yAxes = []
-    this.state.selected.forEach(label => {
-        datasets.push(
-          {
-            type: 'line',
-            label: label,
-            labels: Object.keys(data[label]),
-            data: Object.values(data[label]),
-            backgroundColor: "rgba(0, 0, 0, 1)",
-            borderColor: "rgba(78, 42, 132, 1)", //this.props.theme.palette.primary.main,
-            pointBackgroundColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
-            pointBorderColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
-            borderWidth: "2",
-            lineTension: 0.45,
-            yAxisID: label
-          }
-        );
-        yAxes.push(
-          {
-            id: label,
-            position: 'left'
-          }
-        );
+    const [graphState, setGraphState] = useState(initialState);
+    const [state, setState] = useTracked();
 
-        const newChartData = {
-          ...this.state.lineChartData,
-          datasets: datasets
+    useEffect(() => {
+      var datasets = []
+      var yAxes = []
+      selected.forEach(label => {
+          datasets.push(
+            {
+              type: 'line',
+              label: label,
+              labels: Object.keys(state.data[label]),
+              data: Object.values(state.data[label]),
+              backgroundColor: "rgba(0, 0, 0, 1)",
+              borderColor: "rgba(78, 42, 132, 1)", 
+              pointBackgroundColor: "rgba(78, 42, 132, 1)",
+              pointBorderColor: "rgba(78, 42, 132, 1)",
+              borderWidth: "2",
+              lineTension: 0.45,
+              yAxisID: label
+            }
+          );
+          yAxes.push(
+            {
+              id: label,
+              position: 'left'
+            }
+          );
         }
+      )
 
-        const newChartOptions = {
-          ...this.state.lineChartOptions,
-          scales: {...this.state.lineChartOptions.scales, yAxes: yAxes}
-        }
-
-        this.setState({lineChartData: newChartData, lineChartOptions: newChartOptions})
+      const newChartData = {
+        ...graphState.lineChartData,
+        datasets: datasets
       }
-    )
-  }
 
-  componentDidMount() {
-    this.updateState();
-  }
+      const newChartOptions = {
+        ...graphState.lineChartOptions,
+        scales: {...graphState.lineChartOptions.scales, yAxes: yAxes}
+      }
 
-  componentDidUpdate() {
-    this.updateState();
-  }
+      setGraphState({lineChartData: newChartData, lineChartOptions: newChartOptions})
 
-  render() {
-    const { classes } = this.props;
+    }, [state, graphState]);
 
     return (
       <div xs={12} style={{height: 400}}>
@@ -121,8 +107,91 @@ class Graph extends React.Component {
         />
       </div>
     );
-  }
+
 }
 
-export default withStyles(styles, { withTheme: true })(Graph);
+// class Graph extends React.Component {
+
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       selected: (typeof props.selected === 'undefined') ? [] : props.selected,
+//       lineChartData: {
+//         // labels: [],
+//         datasets: []
+//       },
+//       lineChartOptions: {
+//         responsive: true,
+//         maintainAspectRatio: false,
+//         tooltips: {
+//           enabled: true
+//         },
+//         scales: {
+//           xAxes: [
+//             {
+//               ticks: {
+//                 autoSkip: true,
+//                 suggestedMax: 100
+//               }
+//             }
+//           ]
+//         },
+//         plugins: {
+//           zoom: {
+//               pan: {
+//                   enabled: true,
+//                   mode: 'x',
+//                   speed: 100,
+//               },
+//               zoom: {
+//                   enabled: true,
+//                   mode: 'x',
+//                   speed: 500,
+//                   sensitivity: 0.5,
+//               }
+//           }
+//       }
+//       }
+//     };
+//   }
+
+//   updateState() {
+//         var newData = GraphHelper()
+
+//         const newChartData = {
+//           ...this.state.lineChartData,
+//           datasets: newData[0]
+//         }
+
+//         const newChartOptions = {
+//           ...this.state.lineChartOptions,
+//           scales: {...this.state.lineChartOptions.scales, yAxes: newData[1]}
+//         }
+
+//         this.setState({lineChartData: newChartData, lineChartOptions: newChartOptions})
+//   }
+
+//   componentDidMount() {
+//     this.updateState();
+//   }
+
+//   componentDidUpdate() {
+//     this.updateState();
+//   }
+
+//   render() {
+//     const { classes } = this.props;
+
+//     return (
+//       <div xs={12} style={{height: 400}}>
+//         <Chart 
+//           data={this.state.lineChartData}
+//           options={this.state.lineChartOptions}
+//         />
+//       </div>
+//     );
+//   }
+// }
+
+// export default withStyles(styles, { withTheme: true })(Graph);
 // export default Graph;

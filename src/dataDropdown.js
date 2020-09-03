@@ -1,58 +1,84 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Select from 'react-select';
-import { useDataState } from './globalState';
+import { useTracked } from './globalState';
 
-const {data, setData} = useDataState();
+export function DataDropdown(props) {
+  const intitialState = {
+    options: [],
+    selected: [],
+  }
 
-class DataDropDown extends React.Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      options: [],
-      selected: []
-    }
-  };
+  const [ddState, setddState] = useState(intitialState);
+  const [state, setState] = useTracked();
 
-  setOptions() {
+  useEffect(() => {
     var options = [];
-    Object.keys(data).forEach(key => options.push(
+    Object.keys(state.data).forEach(key => options.push(
       {
         value: key,
         label: key
       }
     ));
-    this.setState({options: options});
 
-    if (this.props.onChange) {
-      this.props.onChange(this.state);
-    }
-  }
+    setddState({options: options});
+  }, [state]);
 
-  componentDidMount() {
-    this.setOptions();
-  }
-
-  componentDidUpdate() {
-    this.setOptions();
-  }
-
-  onChangeFunc = selectedOptions => this.setState({selected: selectedOptions.value});
-
-  // TODO: pass selected options to graph!
-
-  render() {
-    return (<Select
-            // defaultValue={[labels[1]]}
-            isMulti
-            name="labels"
-            options={this.state.options}
-            className="basic-multi-select"
-            classNamePrefix="select"
-            onChange={this.onChangeFunc}
-          />
-    );
-  }
+  return (<Select
+    // defaultValue={[labels[1]]}
+    isMulti
+    name="labels"
+    options={ddState.options}
+    className="basic-multi-select"
+    classNamePrefix="select"
+    onChange={(selectedOptions) => setddState({selected: selectedOptions.value})}
+  />
+  );
 }
 
-export default DataDropDown;
+
+// class DataDropDown extends React.Component {
+  
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       options: [],
+//       selected: []
+//     }
+//   };
+
+//   setOptions() {
+//     var options = DataDropdownHelper()
+//     this.setState({options: options});
+
+//     if (this.props.onChange) {
+//       this.props.onChange(this.state);
+//     }
+//   }
+
+//   componentDidMount() {
+//     this.setOptions();
+//   }
+
+//   componentDidUpdate() {
+//     this.setOptions();
+//   }
+
+//   onChangeFunc = selectedOptions => this.setState({selected: selectedOptions.value});
+
+//   // TODO: pass selected options to graph!
+
+//   render() {
+//     return (<Select
+//             // defaultValue={[labels[1]]}
+//             isMulti
+//             name="labels"
+//             options={this.state.options}
+//             className="basic-multi-select"
+//             classNamePrefix="select"
+//             onChange={this.onChangeFunc}
+//           />
+//     );
+//   }
+// }
+
+// export default DataDropDown;

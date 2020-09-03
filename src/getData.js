@@ -1,55 +1,105 @@
-import React from "react";
-import { useDataState, usePortState } from './App';
+import React, { useState, useEffect } from "react";
+import { useTracked } from './globalState';
 
-const {data, setData} = useDataState();
-const {port, setPort} = usePortState();
 const updateInterval = 1000;
 
-class GetData extends React.Component {
+async function grabData() {
+  if (port) {
+    const response = await fetch('/request-data/', {});
+    const json = await response.json();
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      version: 0,
-      flags: 0
-    };
+    // if no new data, return 0
+    if (json.length == 0) { return 0; }
+    // else return new data
+    else { return json; }
   }
+}
+ 
 
-  componentDidMount() {
-    setInterval( this.updateData,
-    updateInterval)
-  }
+export function GetData(props) {
+  const initialState = {
+    version: 0,
+    flags: 0
+  };
 
-  async grabData() {
-    if (port) {
-      const response = await fetch('/request-data/', {});
-      const json = await response.json();
+  const [getDataState, setGetDataState] = useState(initialState);
+  const [state, setState] = useTracked();
 
-      // if no new data, return 0
-      if (json.length == 0) { return 0; }
-      // else return new data
-      else { return json; }
-      // else { return [json[0]['time'], json[0]['data']]; }
-    }
-  }
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const d = await grabData();
+      if ( !d ) { return; }
 
-  async updateData() {
-    const d = await this.grabData();
-    console.log(d);
-    if ( !d ) { return; }
+      var data = state.data;
+      d.forEach(el => 
+        Object.entries(el[data]).forEach(([key, val]) => 
+          data[key][el[time]] = val
+          )
+        );
 
-    // d looks like: [{'version': 0, 'flags': 0, 'payloadSize': 0, 'seqNum': 0, 'checksum': 66047, 'time': '19:10:20', 'data': {0: 1, 1: 17}}, ...]
-    // data of form: {'label1': {time1: value1, time2: value2, ...}, 'label2': ...}
+      setState({data: data});
+    }, updateInterval);
     
-    d.forEach(el => 
-      Object.entries(el[data]).forEach(([key, val]) => 
-        data[key][el[time]] = val
-        )
-      );
-
-    setData(data);
-  }    
+    return () => clearInterval(interval);
+  }, []);
 
 }
+
+// class GetData extends React.Component {
+
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       version: 0,
+//       flags: 0
+//     };
+//   }
+
+//   componentDidMount() {
+//     setInterval( this.updateData,
+//     updateInterval)
+//   }
+
+//   async grabData() {
+//     if (port) {
+//       const response = await fetch('/request-data/', {});
+//       const json = await response.json();
+
+//       // if no new data, return 0
+//       if (json.length == 0) { return 0; }
+//       // else return new data
+//       else { return json; }
+//       // else { return [json[0]['time'], json[0]['data']]; }
+//     }
+//   }
+
+//   async updateData() {
+//     const d = await this.grabData();
+//     // var data = state.data;
+//     console.log(d);
+//     if ( !d ) { return; }
+
+//     var data = state.data;
+
+//     d.forEach(el => 
+//       Object.entries(el[data]).forEach(([key, val]) => 
+//         data[key][el[time]] = val
+//         )
+//       );
+
+//     setState({data: data})
+//     // d looks like: [{'version': 0, 'flags': 0, 'payloadSize': 0, 'seqNum': 0, 'checksum': 66047, 'time': '19:10:20', 'data': {0: 1, 1: 17}}, ...]
+//     // data of form: {'label1': {time1: value1, time2: value2, ...}, 'label2': ...}
+    
+//     // d.forEach(el => 
+//     //   Object.entries(el[data]).forEach(([key, val]) => 
+//     //     data[key][el[time]] = val
+//     //     )
+//     //   );
+
+//     // setState({data: data});
+//   }    
+
+// }
 
 export default GetData;
