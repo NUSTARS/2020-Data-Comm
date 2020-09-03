@@ -28,51 +28,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const actions = [
-  { icon: <LiveTvIcon />, name: 'Live' },
-  { icon: <BackupIcon />, name: 'Uploaded' },
-];
-
-export default function SpeedDials() {
+export default function NewGraphFab() {
   const classes = useStyles();
-  const [direction, setDirection] = React.useState('up');
-  const [open, setOpen] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
   return (
     <div className={classes.root}>
       <div className={classes.exampleWrapper}>
-      <Fab className={classes.Fab} variant="extended" size="small" color="primary">
+      <Fab className={classes.Fab} variant="extended" size="small" color="primary" disabled='true'>
         <AddIcon className={classes.extendedIcon} />
         New Graph
       </Fab>
-        {/* <SpeedDial
-          ariaLabel="Add Graph"
-          className={classes.speedDial}
-          hidden={hidden}
-          icon={<SpeedDialIcon />}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          open={open}
-          direction={direction}
-        > 
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={handleClose}
-            />
-          ))}
-        </SpeedDial> */}
       </div>
     </div>
   );

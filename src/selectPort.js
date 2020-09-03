@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import Button from '@material-ui/core/Button';
-import usePortState from './App'
+import { usePortState } from './globalState';
 
 const {port, setPort} = usePortState();
 
@@ -17,25 +17,15 @@ class SelectPort extends React.Component {
   };
 
   componentDidMount() {
-    fetch('/ports/').then(res => res.json()).
-      then(data => {
-        var options = [];
-        data.ports.forEach(port => options.push(
-          {
-            value: port,
-            label: port
-          }
-        ));
-        this.setState({ports: options});
-      }, []);
+    this.getPorts();
   }
 
   // componentDidUpdate() {
   // }
 
   getPorts() {
-    fetch('/ports/').then(res => res.json()).
-      then(data => {
+    fetch('/ports/').then(res => res.json())
+      .then(data => {
         var options = [];
         data.ports.forEach(port => options.push(
           {

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Chart from "./chart";
 import { Resizable, ResizableBox } from 'react-resizable';
 import * as zoom from 'chartjs-plugin-zoom';
-import useDataState from './App';
+import { useDataState } from './globalState';
 
 const {data, setData} = useDataState();
 
@@ -21,22 +21,10 @@ class Graph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected = (typeof props.selected == 'undefined') ? [] : props.selected,
+      selected: (typeof props.selected === 'undefined') ? [] : props.selected,
       lineChartData: {
         // labels: [],
-        datasets: [
-          // {
-          //   type: "line",
-          //   label: 'set1',
-          //   backgroundColor: "rgba(0, 0, 0, 1)",
-          //   borderColor: "rgba(78, 42, 132, 1)", //this.props.theme.palette.primary.main,
-          //   pointBackgroundColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
-          //   pointBorderColor: "rgba(78, 42, 132, 1)",//this.props.theme.palette.secondary.main,
-          //   borderWidth: "2",
-          //   lineTension: 0.45,
-          //   data: []
-          // }
-        ]
+        datasets: []
       },
       lineChartOptions: {
         responsive: true,
@@ -100,20 +88,20 @@ class Graph extends React.Component {
         );
 
         const newChartData = {
-          ... this.state.lineChartData,
+          ...this.state.lineChartData,
           datasets: datasets
         }
 
         const newChartOptions = {
-          ... this.state.lineChartOptions,
-          scales: {... scales, yAxes: yAxes}
+          ...this.state.lineChartOptions,
+          scales: {...this.state.lineChartOptions.scales, yAxes: yAxes}
         }
 
         this.setState({lineChartData: newChartData, lineChartOptions: newChartOptions})
       }
     )
   }
-  
+
   componentDidMount() {
     this.updateState();
   }
@@ -137,3 +125,4 @@ class Graph extends React.Component {
 }
 
 export default withStyles(styles, { withTheme: true })(Graph);
+// export default Graph;

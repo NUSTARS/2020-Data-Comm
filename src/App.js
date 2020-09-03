@@ -1,34 +1,35 @@
 import React, { createContext } from "react";
 import MiniDrawer from "./drawer";
+import GlobalStateProvider from './globalState';
 
-const dataInitState = {data: {}, setData: undefined};
-const portInitState = {port: '', setPort: undefined};
+// const dataInitState = {data: {}, setData: undefined};
+// const portInitState = {port: '', setPort: undefined};
 
-const DataStateContext = createContext(dataInitState);
-const PortStateContext = createContext(portInitState);
+// const DataStateContext = createContext(dataInitState);
+// const PortStateContext = createContext(portInitState);
 
-/**
- * Global State provider & hooks
- */
-const GlobalStateProvider = ({ children }) => {
-  const [data, setData] = React.useState(dataInitState.data);
-  const [port, setPort] = React.useState(portInitState.port);
-  const dataContextValue = React.useMemo(() => ({data, setData}), [data]);
-  const portContextValue = React.useMemo(() => ({port, setPort}), [port]);
+// /**
+//  * Global State provider & hooks
+//  */
+// const GlobalStateProvider = ({ children }) => {
+//   const [data, setData] = React.useState(dataInitState.data);
+//   const [port, setPort] = React.useState(portInitState.port);
+//   const dataContextValue = React.useMemo(() => ({data, setData}), [data]);
+//   const portContextValue = React.useMemo(() => ({port, setPort}), [port]);
 
-  return (
-    <DataStateContext.Provider value={dataContextValue}>
-      <PortStateContext.Provider value={portContextValue}>
-          {children}
-      </PortStateContext.Provider>
-    </DataStateContext.Provider>
-  );
-};
+//   return (
+//     <DataStateContext.Provider value={dataContextValue}>
+//       <PortStateContext.Provider value={portContextValue}>
+//           {children}
+//       </PortStateContext.Provider>
+//     </DataStateContext.Provider>
+//   );
+// };
 
-export const useDataState = () => React.useContext(dataStateContext);
-export const usePortState = () => React.useContext(portStateContext);
+// export const useDataState = () => React.useContext(DataStateContext);
+// export const usePortState = () => React.useContext(PortStateContext);
 
-export const App = () => {
+const App = () => {
 
   return ( 
     <GlobalStateProvider>
@@ -37,9 +38,10 @@ export const App = () => {
       </div>
     </GlobalStateProvider>
   )
-
-
 }
+
+export default App;
+
 
 // class App extends React.Component {
 
