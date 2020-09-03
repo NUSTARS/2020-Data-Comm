@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Graph from './graph';
-import DataDropDown from './dataDropdown';
+import {Graph} from './graph';
+import {DataDropDown} from './dataDropdown';
 
 const useStyles = makeStyles((theme) => ({
   root: {

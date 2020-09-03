@@ -66,10 +66,11 @@ def run():
     global sthread
     global dataLock
     global selected_port
-    global run
+    global run_thread
     prev_port = None
     buf = b''
-    while run:
+    ser = None
+    while run_thread:
         if selected_port:
             if prev_port != selected_port:
                 ser.close()
@@ -91,7 +92,7 @@ def run():
             
             prev_port = selected_port
     
-    ser.close()
+    if ser: ser.close()
     sthread.join()
 
 def startThread():
@@ -100,7 +101,7 @@ def startThread():
 
 data = []
 selected_port = None
-run = True
+run_thread = True
 dataLock = threading.Lock()
 sthread = threading.Thread(target=run, args=())
 

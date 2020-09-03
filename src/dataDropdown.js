@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { useTracked } from './globalState';
 
-export function DataDropdown(props) {
+export function DataDropDown(props) {
   const intitialState = {
     options: [],
     selected: [],
@@ -13,15 +13,17 @@ export function DataDropdown(props) {
 
   useEffect(() => {
     var options = [];
-    Object.keys(state.data).forEach(key => options.push(
-      {
-        value: key,
-        label: key
-      }
-    ));
+    if (typeof state.data !== 'undefined') {
+      Object.keys(state.data).forEach(key => options.push(
+        {
+          value: key,
+          label: key
+        }
+      ));
+    }
 
     setddState({options: options});
-  }, [state]);
+  }, [state.data]);
 
   return (<Select
     // defaultValue={[labels[1]]}

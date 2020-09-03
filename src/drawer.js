@@ -15,7 +15,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import NewGraphFab from "./newGraphFab";
 import CustomizedTables from "./table"
 import CenteredGrid from './grid';
-import SelectPort from './selectPort';
+import {SelectPort} from './selectPort';
 
 const drawerWidth = 400;
 
