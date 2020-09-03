@@ -4,14 +4,6 @@ import Chart from "./chart";
 import * as zoom from 'chartjs-plugin-zoom';
 import { useTracked } from './globalState';
 
-
-// const styles = theme => ({
-//   "chart-container": {
-//     maxHeight: 600,
-//     overflow: "hidden"
-//   }
-// });
-
 export function Graph(props) {
 
   const initialState = {
@@ -111,89 +103,3 @@ export function Graph(props) {
     );
 
 }
-
-// class Graph extends React.Component {
-
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       selected: (typeof props.selected === 'undefined') ? [] : props.selected,
-//       lineChartData: {
-//         // labels: [],
-//         datasets: []
-//       },
-//       lineChartOptions: {
-//         responsive: true,
-//         maintainAspectRatio: false,
-//         tooltips: {
-//           enabled: true
-//         },
-//         scales: {
-//           xAxes: [
-//             {
-//               ticks: {
-//                 autoSkip: true,
-//                 suggestedMax: 100
-//               }
-//             }
-//           ]
-//         },
-//         plugins: {
-//           zoom: {
-//               pan: {
-//                   enabled: true,
-//                   mode: 'x',
-//                   speed: 100,
-//               },
-//               zoom: {
-//                   enabled: true,
-//                   mode: 'x',
-//                   speed: 500,
-//                   sensitivity: 0.5,
-//               }
-//           }
-//       }
-//       }
-//     };
-//   }
-
-//   updateState() {
-//         var newData = GraphHelper()
-
-//         const newChartData = {
-//           ...this.state.lineChartData,
-//           datasets: newData[0]
-//         }
-
-//         const newChartOptions = {
-//           ...this.state.lineChartOptions,
-//           scales: {...this.state.lineChartOptions.scales, yAxes: newData[1]}
-//         }
-
-//         this.setState({lineChartData: newChartData, lineChartOptions: newChartOptions})
-//   }
-
-//   componentDidMount() {
-//     this.updateState();
-//   }
-
-//   componentDidUpdate() {
-//     this.updateState();
-//   }
-
-//   render() {
-//     const { classes } = this.props;
-
-//     return (
-//       <div xs={12} style={{height: 400}}>
-//         <Chart 
-//           data={this.state.lineChartData}
-//           options={this.state.lineChartOptions}
-//         />
-//       </div>
-//     );
-//   }
-// }
-
-// export default withStyles(styles, { withTheme: true })(Graph);
-// export default Graph;
