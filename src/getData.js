@@ -30,14 +30,18 @@ export function GetData(props) {
       const d = await grabData();
       if ( !d ) { return; }
 
-      var data = state.data;
+      // d looks like: [{'version': 0, 'flags': 0, 'payloadSize': 0, 'seqNum': 0, 'checksum': 66047, 'time': '19:10:20', 'data': {0: 1, 1: 17}}, ...]
+      // data of form: {'label1': [[time1, value1], [time2, value2], ...], 'label2': [...], ...}
+
+      var mutdata = state.data;
       d.forEach(el => 
-        Object.entries(el[data]).forEach(([key, val]) => 
-          data[key][el[time]] = val
+        Object.entries(el['data']).forEach(([key, val]) => 
+          { (key in mutdata) ? mutdata[key].append([el['time'], val]) : mutdata[key] = [[el['time'], val]]; }
+          // data[key][el[time]] = val
           )
         );
 
-      setState({data: data});
+      setState({data: mutata});
     }, updateInterval);
     
     return () => clearInterval(interval);

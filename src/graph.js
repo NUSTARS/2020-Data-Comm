@@ -58,8 +58,8 @@ export function Graph(props) {
               {
                 type: 'line',
                 label: label,
-                labels: Object.keys(state.data[label]),
-                data: Object.values(state.data[label]),
+                labels: state.data[label].map(x => x[0]), //Object.keys(state.data[label]),
+                data: state.data[label].map(x => x[1]), //Object.values(state.data[label]),
                 backgroundColor: "rgba(0, 0, 0, 1)",
                 borderColor: "rgba(78, 42, 132, 1)", 
                 pointBackgroundColor: "rgba(78, 42, 132, 1)",
