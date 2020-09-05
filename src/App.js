@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import MiniDrawer from "./drawer";
 import { Provider } from './globalState';
+import { GetData } from './getData';
 
 // const dataInitState = {data: {}, setData: undefined};
 // const portInitState = {port: '', setPort: undefined};
@@ -53,6 +54,7 @@ const App = () => {
     <Provider>
       <div>
         <MiniDrawer/>
+        <GetData/>
       </div>
     </Provider>
   )

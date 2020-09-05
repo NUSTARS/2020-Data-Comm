@@ -1,4 +1,6 @@
 from struct import unpack, Struct
+from struct import error as structerror
+# import struct
 from binascii import crc32
 import time
 import datetime
@@ -91,7 +93,7 @@ def read_packet(ba):
         print(f'Error: {error}')
         return 0
 
-    except struct.error as error:
+    except structerror as error:
         print(f'Error: {error}')
         return 0
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -31,12 +31,19 @@ export default function CustomizedTables() {
   const [state, setState] = useTracked();
 
   useEffect(() => {
-    r = []
+    var r = []
+    if (typeof state.data !== 'undefined') {
     Object.keys(state.data).forEach((key) => {
-      r.append(createData(key, <TextField id="name-${key}"/>, state.data[key][state.data[key].length-1][1], <TextField id="type-${key}"/>))
-    });
+      r.append(createData(key, 
+                          <TextField id="name-${key}"/>, 
+                          state.data[key][state.data[key].length-1][1], <
+                          TextField id="type-${key}"/>
+                         )
+              )
+     });
+    }
     setTableState({rows: r});
-  })
+  }, [state.data])
 
   return (
     <TableContainer style={{paddingBottom: 20}}>
@@ -50,7 +57,7 @@ export default function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {tableState.rows.map((row) => (
             <TableRow key={row.label}>
               <TableCell component="th" scope="row">
                 {row.label}

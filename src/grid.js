@@ -26,10 +26,10 @@ export default function CenteredGrid() {
     <div className={classes.root} xs={12}>
 
         <Paper className={classes.paper}>
-          <Grid xs={12}>
+          <Grid>
             <Graph selected={selected}/>
           </Grid>
-          <Grid xs={12} style={{justifyContent: "flex-center"}}>
+          <Grid style={{justifyContent: "flex-center"}}>
             <DataDropDown onChange={selectionHandler}/>
           </Grid>
         </Paper>

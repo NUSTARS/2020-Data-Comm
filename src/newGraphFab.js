@@ -34,7 +34,7 @@ export default function NewGraphFab() {
   return (
     <div className={classes.root}>
       <div className={classes.exampleWrapper}>
-      <Fab className={classes.Fab} variant="extended" size="small" color="primary" disabled='true'>
+      <Fab className={classes.Fab} variant="extended" size="small" color="primary" disabled={true}>
         <AddIcon className={classes.extendedIcon} />
         New Graph
       </Fab>

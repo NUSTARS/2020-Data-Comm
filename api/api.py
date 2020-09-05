@@ -51,8 +51,8 @@ def get_data():
     global dataLock
     with dataLock:
         d = data.copy()
-        print(f'data: {d}')
-        print(f'json dump: {jsonify(d)}')
+        # print(f'data: {d}')
+        # print(f'json dump: {jsonify(d)}')
         data = []
     return jsonify(d)
 
@@ -73,7 +73,7 @@ def run():
     while run_thread:
         if selected_port:
             if prev_port != selected_port:
-                ser.close()
+                if ser: ser.close()
                 ser = serial.Serial(selected_port)
 
             print(f'Reading from port {ser.name}...')
