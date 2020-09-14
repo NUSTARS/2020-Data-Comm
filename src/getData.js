@@ -3,18 +3,6 @@ import { useTracked } from './globalState';
 
 const updateInterval = 1000;
 
-// async function grabData() {
-//   if (port) {
-//     const response = await fetch('/request-data/', {});
-//     const json = await response.json();
-
-//     // if no new data, return 0
-//     if (json.length == 0) { return 0; }
-//     // else return new data
-//     else { return json; }
-//   }
-// }
-
 export function GetData(props) {
   const initialState = {
     version: 0,
@@ -25,9 +13,9 @@ export function GetData(props) {
   const [state, setState] = useTracked();
 
   useEffect(() => {
-    console.log("GET DATA RUNNING");
+    // console.log("GET DATA RUNNING");
     const interval = setInterval(async () => {
-      // const d = await grabData();
+
       async function getd() {
         if (state.port) {
           console.log("REQUESTING DATA");

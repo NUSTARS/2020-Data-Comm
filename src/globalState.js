@@ -4,7 +4,8 @@ import { createContainer } from 'react-tracked';
 
 const initialState = {
   data: {},
-  port: ''
+  port: '',
+  uploadData: {}
 };
 
 const useValue = () => useState(initialState);

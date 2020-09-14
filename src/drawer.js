@@ -16,6 +16,7 @@ import NewGraphFab from "./newGraphFab";
 import CustomizedTables from "./table"
 import CenteredGrid from './grid';
 import {SelectPort} from './selectPort';
+import UploadButton from './uploadButton';
 
 const drawerWidth = 400;
 
@@ -139,6 +140,7 @@ export default function PersistentDrawerLeft() {
         <CustomizedTables/>
         <Divider/>
         <h1>Upload</h1>
+        <UploadButton/>
         {/* <CustomizedTables/> */}
       </Drawer>
       <main

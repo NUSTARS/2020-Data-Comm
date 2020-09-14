@@ -14,6 +14,7 @@ app = Flask(__name__)
 app.debug = False
 app.use_reloader = False
 CORS(app)
+ALLOWED_EXTENSIONS = {'bin'}
 
 @app.route('/ports/')
 def list_ports():
@@ -51,10 +52,30 @@ def get_data():
     global dataLock
     with dataLock:
         d = data.copy()
-        # print(f'data: {d}')
-        # print(f'json dump: {jsonify(d)}')
         data = []
     return jsonify(d)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/upload-data/', methods=['POST'])
+def upload():
+    '''
+    TYPE: POST
+    Receives data and parses uploaded file
+    - Output: Parsed data
+    '''
+    if 'file' not in request.files: return 0
+    f = request.files['file']
+    if f.filename == '': return 0
+    if f and allowed_file(f.filename):
+        data = bytearray(f.read())
+        d = []
+        for i in range(len(data)-10):
+            packet = read_packet(data[i:])
+            if packet: d.append(packet)
+        return jsonify(d)
 
 def run():
     '''
@@ -67,6 +88,7 @@ def run():
     global dataLock
     global selected_port
     global run_thread
+    global fn
     prev_port = None
     buf = b''
     ser = None
@@ -78,11 +100,20 @@ def run():
 
             print(f'Reading from port {ser.name}...')
 
-            buf += ser.read(ser.in_waiting)
+            read = ser.read(ser.in_waiting)
+            buf += read
+            with open(fn+'.bin','ab') as f:
+                f.write(read)
+            # print(buf)
             packet = read_packet(bytearray(buf))
             while not packet and run: 
+                # print('Looking for packet...')
                 buf = buf[1:]
-                buf += ser.read(ser.in_waiting)
+                read = ser.read(ser.in_waiting)
+                buf += read
+                with open(fn+'.bin','ab') as f:
+                    f.write(read)
+                # print(buf)
                 if len(buf) > 10: # possible to be a full packet, has to be more than just header
                     packet = read_packet(bytearray(buf))
             else:
@@ -99,11 +130,15 @@ def startThread():
     global sthread
     sthread.start()
 
+fn = datetime.datetime.now()\
+        .strftime("%m/%d/%Y, %H:%M:%S")\
+        .translate({ord(c): None for c in ' /,:'})
 data = []
+udata = []
 selected_port = None
 run_thread = True
 dataLock = threading.Lock()
-sthread = threading.Thread(target=run, args=())
+sthread = threading.Thread(target=run, args=(), daemon=True)
 
 startThread()
 

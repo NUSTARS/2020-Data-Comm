@@ -85,7 +85,7 @@ def read_packet(ba):
                 'payloadSize': h[2],
                 'seqNum': h[3],
                 'checksum': h[4],
-                'time': datetime.datetime.fromtimestamp(int(time.time())).strftime("%H:%M:%S"),
+                'time': datetime.datetime.now().strftime("%H:%M:%S"),
                 'data': d
               }
        
