@@ -72,9 +72,13 @@ def upload():
     if f and allowed_file(f.filename):
         data = bytearray(f.read())
         d = []
-        for i in range(len(data)-10):
+        i = 0
+        while i < len(data) - 10:
             packet = read_packet(data[i:])
-            if packet: d.append(packet)
+            if packet: 
+                d.append(packet)
+                i += packet['payloadSize']
+            else: i+=1
         return jsonify(d)
 
 def run():
