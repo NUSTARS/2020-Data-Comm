@@ -4,6 +4,7 @@ from struct import error as structerror
 from binascii import crc32
 import time
 import datetime
+# import sys
 
 """
     PACKET FORMAT
@@ -20,6 +21,8 @@ Byte #
       --- 1 byte:  Data type
       --- ? bytes: Data of length dtype size
 """
+
+# end = '>' if sys.byteorder=='big' else '<';
 
 # source venv/bin/activate
 
