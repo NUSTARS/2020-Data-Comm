@@ -34,7 +34,7 @@ class NUPacketize
   
   public:
     NUPacketize();
-    ~NUPacketize();
+    // ~NUPacketize();
     template <typename T>
     void addData(int, T);
     void sendPacket(int flags = 0);
@@ -77,36 +77,40 @@ class NUPacketize
 }
 
 template<typename T>
-void addData(int id, T data)
+void NUPacketize::addData(int id, T data)
 {
   Data data = NUPacketize::Data(id, data);
   std::vector<uint8_t> newData = NUPacketize::uint8Vectorize(data);
   _payload.insert(_payload.end(), newData.begin(), newData.end());
-  
 }
 
-void sendPacket(uint8_t flags = 0)
+void NUPacketize::sendPacket(uint8_t flags = 0)
 {
   Header header = Header();
   std::vector<uint8_t> header_vec = NUPacketize::uint8vectorize(header);
   std::vector<uint8_t> packet = header_vec.insert(header_vec.end(), _payload.begin(), payload.end())
-  Serial.write(packet, packet.size());
+  Serial.write(&packet[0], packet.size());
+  _payload.clear()
 }
 
 template<typename T>
-std::vector<uint8_t> uint8Vectorize(T)
+std::vector<uint8_t> NUPacketize::uint8Vectorize(T)
 {
-  int n = sizeof(T);
-  vector<uint8_t> vec;
-  for(int y=0; n-->0; y++) {
-      // big endian    
-      vec.push_back((T>>(n*8))&0xff);
-  }
-  return vec;
+  uint8_t arr[sizeof(T)];
+  memcpy(arr, &T, sizeof(T));
+  std::vector<uint8_t> v(std::begin(arr), std::end(arr));
+  return v;
+  // int n = sizeof(T);
+  // vector<uint8_t> vec;
+  // for(int y=0; n-->0; y++) {
+  //     // big endian    
+  //     vec.push_back((T>>(n*8))&0xff);
+  // }
+  // return vec;
 }
 
 template <typename T>
-constexpr auto type_name() noexcept {
+constexpr auto NUPacketize::type_name() noexcept {
   std::string_view name, prefix, suffix;
 #ifdef __clang__
   name = __PRETTY_FUNCTION__;
