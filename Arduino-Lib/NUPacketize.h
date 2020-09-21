@@ -14,7 +14,7 @@
 #include <string_view>
 
 
-#define types std::map<std::string_view, uint8_t> = {
+#define std::map<std::string_view, uint8_t> types = {
     { "unsigned char", 0 },
     { "short unsigned int", 1 },
     { "unsigned int", 2 },
