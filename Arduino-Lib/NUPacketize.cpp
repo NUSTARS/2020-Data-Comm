@@ -6,10 +6,7 @@
       crc32 implementation modified from https://gist.github.com/timepp
 */
 
-#include "Arduino.h"
 #include "NUPacketize.h"
-// #include <cstdint>
-#include <stdint.h>
 
 NUPacketize::NUPacketize(){}
 

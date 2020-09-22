@@ -78,7 +78,7 @@ class NUPacketize
     };
     
     template<typename T>
-    std::vector<uint8_t> uint8Vectorize(T);
+    std::vector<uint8_t> Serialize(T);
 
     template <typename T>
     constexpr auto type_name() noexcept;
@@ -92,21 +92,21 @@ template<typename T>
 void NUPacketize::addData(int id, T data)
 {
   Data data = NUPacketize::Data(id, data);
-  std::vector<uint8_t> newData = NUPacketize::uint8Vectorize(data);
+  std::vector<uint8_t> newData = NUPacketize::Serialize(data);
   _payload.insert(_payload.end(), newData.begin(), newData.end());
 }
 
 void NUPacketize::sendPacket(uint8_t flags = 0)
 {
   Header header = Header();
-  std::vector<uint8_t> header_vec = NUPacketize::uint8vectorize(header);
+  std::vector<uint8_t> header_vec = NUPacketize::Serialize(header);
   std::vector<uint8_t> packet = header_vec.insert(header_vec.end(), _payload.begin(), payload.end())
   Serial.write(&packet[0], packet.size());
   _payload.clear()
 }
 
 template<typename T>
-std::vector<uint8_t> NUPacketize::uint8Vectorize(T data)
+std::vector<uint8_t> NUPacketize::Serialize(T data)
 {
   std::vector<uint8_t> v;
   switch (type_name<decltype(data)>()) {
